@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Do Zigoto a um Ser Vivo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f5e9; /* Verde claro */
+            text-align: center;
+            margin: 20px;
+        }
+
+        #quiz-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff; /* Branco */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 70px;
+        }
+
+        h2 {
+            color: #2e7d32; /* Verde escuro */
+        }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2e7d32; /* Verde escuro */
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option {
+            font-size: 16px;
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #2e7d32; /* Verde escuro */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #2e7d32; /* Verde escuro */
+        }
+
+        .option:hover {
+            background-color: #c8e6c9; /* Verde claro - Hover */
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #2e7d32; /* Verde escuro */
+        }
+
+        #restart-btn {
+            background-color: #2e7d32; /* Verde escuro */
+            color: #fff; /* Branco */
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #restart-btn:hover {
+            background-color: #1b5e20; /* Verde mais escuro - Hover */
+        }
+    </style>
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <h2>Quiz: Do Zigoto a um Ser Vivo</h2>
+    <div id="question" class="question"></div>
+    <div id="options" class="options"></div>
+    <button onclick="checkAnswer()">Verificar Resposta</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "Qual é o primeiro estágio do desenvolvimento humano?",
+            options: ["Zigoto", "Embrião", "Feto", "Bebê", "Adulto"],
+            correct: "Zigoto"
+        },
+        {
+            question: "O que acontece durante a fase de embriogênese?",
+            options: ["Implantação do zigoto no útero", "Formação do zigoto", "Desenvolvimento do embrião", "Nascimento do bebê", "Puberdade"],
+            correct: "Desenvolvimento do embrião"
+        },
+        {
+            question: "Quantos cromossomos um ser humano normalmente possui?",
+            options: ["42", "46", "52", "50", "48"],
+            correct: "46"
+        },
+        {
+            question: "Onde ocorre a fertilização?",
+            options: ["Trompas de Falópio", "Útero", "Vagina", "Ovários", "Bexiga"],
+            correct: "Trompas de Falópio"
+        },
+        {
+            question: "O que é a meiose?",
+            options: ["Divisão celular que forma células somáticas", "Divisão celular que forma células germinativas", "Processo de formação de gêmeos", "Estágio inicial do desenvolvimento embrionário", "Processo de envelhecimento celular"],
+            correct: "Divisão celular que forma células germinativas"
+        },
+        {
+            question: "Qual é a função do líquido amniótico durante a gravidez?",
+            options: ["Alimentar o feto", "Proteger o feto de infecções", "Ajudar no desenvolvimento dos órgãos do feto", "Regular a temperatura do feto", "Facilitar o parto"],
+            correct: "Proteger o feto de infecções"
+        },
+        {
+            question: "O que é o blastocisto?",
+            options: ["Estágio inicial do desenvolvimento embrionário", "Célula germinativa masculina", "Estrutura que nutre o embrião", "Órgão reprodutor feminino", "Tipo de célula sanguínea"],
+            correct: "Estágio inicial do desenvolvimento embrionário"
+        },
+        {
+            question: "Quando ocorre a formação dos órgãos principais durante o desenvolvimento embrionário?",
+            options: ["Fase pré-natal", "Primeira semana após a fertilização", "Segunda semana após a fertilização", "Terceira semana após a fertilização", "Quarta semana após a fertilização"],
+            correct: "Terceira semana após a fertilização"
+        },
+        {
+            question: "O que é a placenta?",
+            options: ["Órgão responsável pela produção de leite", "Órgão que conecta o feto à parede uterina", "Hormônio liberado durante a gravidez", "Órgão que produz espermatozoides", "Estágio final do desenvolvimento embrionário"],
+            correct: "Órgão que conecta o feto à parede uterina"
+        },
+        {
+            question: "Qual é a última fase do desenvolvimento humano antes do nascimento?",
+            options: ["Fase embrionária", "Fase fetal", "Fase germinativa", "Fase pré-natal", "Fase neonatal"],
+            correct: "Fase fetal"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+
+        questionElement.textContent = quizData[currentQuestion].question;
+        optionsElement.innerHTML = "";
+
+        for (let i = 0; i < quizData[currentQuestion].options.length; i++) {
+            const option = document.createElement("div");
+            option.className = "option";
+            option.textContent = quizData[currentQuestion].options[i];
+            option.onclick = () => selectOption(quizData[currentQuestion].options[i]);
+            optionsElement.appendChild(option);
+        }
+    }
+
+    function selectOption(selectedOption) {
+        const resultElement = document.getElementById("result");
+
+        if (selectedOption === quizData[currentQuestion].correct) {
+            score++;
+            resultElement.textContent = "Resposta correta!";
+        } else {
+            resultElement.textContent = "Resposta incorreta. A resposta correta é: " + quizData[currentQuestion].correct;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        const quizContainer = document.getElementById("quiz-container");
+        quizContainer.innerHTML = `<h2>Resultado Final</h2>
+                                  <p>Você acertou ${score} de ${quizData.length} perguntas.</p>`;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
